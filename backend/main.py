@@ -4,11 +4,12 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"status": "OmniCreate LIVE - backend running"}
+    return {"status": "OMNICREATE LIVE", "ok": True}
 
 @app.post("/api/generate-music")
 def generate_music():
     return {
-        "track": "demo-beat",
-        "status": "ok"
+        "track_id": "demo-001",
+        "style": "hip hop cinematic",
+        "audio_url": "https://example.com/audio.mp3"
     }
