@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uuid, random
+from backend.music_engine import generate_music
 
 app = FastAPI()
 
@@ -17,17 +17,5 @@ def root():
     return {"status": "OMNICREATE LIVE"}
 
 @app.post("/api/generate-music")
-def generate_music():
-    styles = [
-        "cinematic hip hop",
-        "drill ambient",
-        "lofi emotional",
-        "trap dark wave",
-        "piano cinematic"
-    ]
-
-    return {
-        "track_id": str(uuid.uuid4()),
-        "style": random.choice(styles),
-        "audio_url": "https://example.com/audio.mp3"
-    }
+def create_music():
+    return generate_music()
