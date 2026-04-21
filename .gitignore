@@ -1,1 +1,27 @@
-.vercel
+# dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# env files
+.env
+.env.local
+.env.*.local
+
+# build outputs
+dist/
+build/
+.next/
+.vite/
+
+# system
+.DS_Store
+*.log
+
+# python
+venv/
+.venv/
+
+# local temp
+tmp/
+temp/
