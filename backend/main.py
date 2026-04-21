@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import uuid
-import time
+
+from agents.input_agent import process_input
+from agents.processor_agent import run_generation
+from agents.auditor_agent import validate_output
 
 app = FastAPI()
 
@@ -12,28 +14,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================
-# CORE FUNCTIONAL ENGINE
-# =========================
-def run_generation(style: str):
-    # STEP 1: validate request
-    if not style:
-        return {"error": "missing style"}
-
-    # STEP 2: simulate processing time (real pipeline behavior)
-    time.sleep(1.5)
-
-    # STEP 3: output contract
-    return {
-        "track_id": str(uuid.uuid4()),
-        "status": "completed",
-        "style": style,
-        "audio_url": f"https://cdn.omnicreate.ai/{uuid.uuid4()}.mp3"
-    }
-
 @app.post("/api/generate-music")
-def generate_music():
-    return run_generation("cinematic hip hop")
+async def generate_music(request: Request):
+    payload = await request.json()
+
+    # 1. INPUT AGENT
+    data, error = process_input(payload)
+    if error:
+        return {"error": error}
+
+    # 2. PROCESSOR AGENT
+    result = run_generation(data)
+
+    # 3. AUDITOR AGENT
+    valid, audit_error = validate_output(result)
+    if not valid:
+        return {"error": audit_error}
+
+    return result
 
 @app.get("/health")
 def health():
