@@ -1,32 +1,35 @@
 import { useState } from "react";
 
-export default function Dashboard() {
-  const [track, setTrack] = useState(null);
+const API = import.meta.env.VITE_API_URL || "";
 
-  const API = import.meta.env.VITE_API_URL;
+export default function Dashboard() {
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const generate = async () => {
-    const res = await fetch(`${API}/api/generate-music`, {
-      method: "POST"
-    });
-
-    const data = await res.json();
-    setTrack(data);
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/api/generate-music`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      setResult(data);
+    } catch (e) {
+      setResult({ error: "API failed" });
+    }
+    setLoading(false);
   };
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>🎧 OmniCreate AI</h1>
-
+    <div>
       <button onClick={generate}>
-        Generate AI Beat
+        {loading ? "Generating..." : "Generate Beat"}
       </button>
 
-      {track && (
-        <div>
-          <p>Style: {track.style}</p>
-          <p>ID: {track.track_id}</p>
-        </div>
+      {result && (
+        <pre style={{ marginTop: 20 }}>
+          {JSON.stringify(result, null, 2)}
+        </pre>
       )}
     </div>
   );
