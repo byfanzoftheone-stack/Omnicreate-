@@ -4,7 +4,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"status": "OMNICREATE STABLE MVP"}
+    return {"status": "OMNICREATE LIVE OK"}
 
 @app.post("/api/generate-music")
 def generate_music():
