@@ -1,15 +1,1 @@
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"status": "OMNICREATE LIVE", "ok": True}
-
-@app.post("/api/generate-music")
-def generate_music():
-    return {
-        "track_id": "demo-001",
-        "style": "hip hop cinematic",
-        "audio_url": "https://example.com/audio.mp3"
-    }
+from app.main import app
