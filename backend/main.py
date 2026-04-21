@@ -7,7 +7,6 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -22,12 +21,12 @@ styles = [
 
 @app.get("/")
 def root():
-    return {"status": "OmniCreate LIVE", "ok": True}
+    return {"status": "OMNICREATE LIVE"}
 
 @app.post("/api/generate-music")
 def generate_music():
     return {
         "track_id": str(uuid.uuid4()),
         "style": random.choice(styles),
-        "audio_url": "https://file-examples.com/storage/fe3c2f7a.mp3"
+        "audio_url": "https://example.com/demo.mp3"
     }
