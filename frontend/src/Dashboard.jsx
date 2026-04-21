@@ -1,41 +1,35 @@
 import { useState } from "react";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function Dashboard() {
   const [track, setTrack] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const generateMusic = async () => {
-    try {
-      setLoading(true);
+  const generate = async () => {
+    setLoading(true);
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL || "https://omnicreate-production.up.railway.app"}/api/generate-music`,
-        { method: "POST" }
-      );
+    const res = await fetch(`${API}/api/generate-music`, {
+      method: "POST"
+    });
 
-      const data = await res.json();
-      setTrack(data);
-    } catch (err) {
-      console.log("API ERROR:", err);
-      alert("API failed — check Railway connection");
-    } finally {
-      setLoading(false);
-    }
+    const data = await res.json();
+    setTrack(data);
+    setLoading(false);
   };
 
   return (
-    <div style={{ padding: 40, fontFamily: "Arial" }}>
+    <div style={{ padding: 30 }}>
       <h1>🎧 OmniCreate AI</h1>
 
-      <button onClick={generateMusic}>
+      <button onClick={generate}>
         {loading ? "Generating..." : "Generate AI Beat"}
       </button>
 
       {track && (
-        <div style={{ marginTop: 20 }}>
-          <h3>Result:</h3>
-          <p><b>Style:</b> {track.style}</p>
-          <p><b>ID:</b> {track.track_id}</p>
+        <div>
+          <p>Style: {track.style}</p>
+          <p>ID: {track.track_id}</p>
         </div>
       )}
     </div>

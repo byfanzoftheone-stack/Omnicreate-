@@ -7,17 +7,10 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-styles = [
-    "cinematic hip hop",
-    "drill ambient",
-    "lofi emotional",
-    "trap dark",
-    "piano cinematic"
-]
 
 @app.get("/")
 def root():
@@ -25,8 +18,16 @@ def root():
 
 @app.post("/api/generate-music")
 def generate_music():
+    styles = [
+        "cinematic hip hop",
+        "drill ambient",
+        "lofi emotional",
+        "trap dark wave",
+        "piano cinematic"
+    ]
+
     return {
         "track_id": str(uuid.uuid4()),
         "style": random.choice(styles),
-        "audio_url": "https://example.com/demo.mp3"
+        "audio_url": "https://example.com/audio.mp3"
     }
