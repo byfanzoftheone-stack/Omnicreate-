@@ -1,7 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Dashboard from "./Dashboard.jsx";
+import App from "./App.jsx";
+import { SYSTEM } from "./system";
+
+console.log("SYSTEM LOADED:", SYSTEM);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <Dashboard />
+  <React.StrictMode>
+    <App system={SYSTEM} />
+  </React.StrictMode>
 );
