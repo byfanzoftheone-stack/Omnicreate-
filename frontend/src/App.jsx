@@ -1,28 +1,29 @@
 import { useState } from "react";
 
 export default function App() {
-  const api = import.meta.env.VITE_API_URL;
+  const API = import.meta.env.VITE_API_URL;
 
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-  const [status, setStatus] = useState("Idle");
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
   const generate = async () => {
     setLoading(true);
-    setStatus("Generating beat...");
-    setResult(null);
+    setError(null);
+    setData(null);
 
     try {
-      const res = await fetch(`${api}/api/generate-music`, {
-        method: "POST"
+      const res = await fetch(`${API}/api/generate-music`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
       });
 
-      const data = await res.json();
+      if (!res.ok) throw new Error("API failed");
 
-      setResult(data);
-      setStatus("Complete");
-    } catch (err) {
-      setStatus("Failed to connect to API");
+      const json = await res.json();
+      setData(json);
+    } catch (e) {
+      setError("Generation failed");
     }
 
     setLoading(false);
@@ -30,18 +31,22 @@ export default function App() {
 
   return (
     <div style={{ padding: 30, fontFamily: "Arial" }}>
-      <h1>🎧 OmniCreate AI</h1>
+      <h1>OmniCreate AI</h1>
 
       <button onClick={generate} disabled={loading}>
         {loading ? "Generating..." : "Generate Beat"}
       </button>
 
-      <p>Status: {status}</p>
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {result && (
+      {data && (
         <div style={{ marginTop: 20 }}>
-          <h3>Result:</h3>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <h3>Result</h3>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+
+          <div>
+            <b>Monetized:</b> {String(data.monetized)}
+          </div>
         </div>
       )}
     </div>
