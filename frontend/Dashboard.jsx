@@ -1,26 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 export default function Dashboard() {
-  const ws = useRef(null);
-  const [data, setData] = useState(null);
+  const [track, setTrack] = useState(null);
 
-  useEffect(() => {
-    ws.current = new WebSocket("ws://localhost:8000/ws/music/create");
+  const generateMusic = async () => {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/generate-music", {
+      method: "POST"
+    });
 
-    ws.current.onmessage = (e) => {
-      setData(JSON.parse(e.data));
-    };
-  }, []);
+    const data = await res.json();
+    setTrack(data);
+  };
 
   return (
-    <div style={{ padding: 20, background: "#000", color: "#fff" }}>
-      <h1>OmniCreate MVP Music Engine</h1>
+    <div style={{ padding: 40 }}>
+      <h1>OmniCreate AI</h1>
 
-      <button onClick={() => ws.current.send("random philosophical thought")}>
-        Generate Song
+      <button onClick={generateMusic}>
+        Generate AI Beat
       </button>
 
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {track && (
+        <div>
+          <p>{track.style}</p>
+          <p>{track.track_id}</p>
+        </div>
+      )}
     </div>
   );
 }

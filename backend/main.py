@@ -1,37 +1,25 @@
-from fastapi import FastAPI, WebSocket
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 import uuid
+import random
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-PROJECTS = {}
-
 @app.get("/")
 def root():
-    return {"status": "OmniCreate MVP running"}
+    return {"status": "OmniCreate LIVE MVP"}
 
-@app.websocket("/ws/stream")
-async def stream(websocket: WebSocket):
-    await websocket.accept()
-    project_id = str(uuid.uuid4())
-    PROJECTS[project_id] = {"transcript": []}
+@app.post("/api/generate-music")
+def generate_music():
+    styles = [
+        "hip hop cinematic",
+        "lofi emotional",
+        "trap dark beat",
+        "future bass wave",
+        "piano storytelling"
+    ]
 
-    await websocket.send_json({"type": "init", "project_id": project_id})
-
-    while True:
-        data = await websocket.receive_text()
-        PROJECTS[project_id]["transcript"].append(data)
-
-        await websocket.send_json({
-            "type": "update",
-            "transcript": " ".join(PROJECTS[project_id]["transcript"]),
-            "emotion": "creative"
-        })
+    return {
+        "track_id": str(uuid.uuid4()),
+        "style": random.choice(styles),
+        "audio_url": "https://placeholder.audio/fake.mp3"
+    }
