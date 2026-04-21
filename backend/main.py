@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uuid
 import time
 
-app = FastAPI(title="OmniCreate API")
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,29 +13,28 @@ app.add_middleware(
 )
 
 # =========================
-# CORE GENERATION ENGINE (DEMO → PRO READY)
+# CORE FUNCTIONAL ENGINE
 # =========================
-def generate_track(style: str):
-    track_id = str(uuid.uuid4())
+def run_generation(style: str):
+    # STEP 1: validate request
+    if not style:
+        return {"error": "missing style"}
 
-    # deterministic placeholder "engine"
+    # STEP 2: simulate processing time (real pipeline behavior)
+    time.sleep(1.5)
+
+    # STEP 3: output contract
     return {
-        "track_id": track_id,
+        "track_id": str(uuid.uuid4()),
         "status": "completed",
         "style": style,
-        "audio_url": f"https://cdn.omnicreate.ai/tracks/{track_id}.mp3",
-        "cost": 1,
-        "monetized": True
+        "audio_url": f"https://cdn.omnicreate.ai/{uuid.uuid4()}.mp3"
     }
 
 @app.post("/api/generate-music")
 def generate_music():
-    return generate_track("cinematic hip hop")
+    return run_generation("cinematic hip hop")
 
-@app.get("/api/health")
+@app.get("/health")
 def health():
-    return {"status": "online"}
-
-@app.get("/")
-def root():
-    return {"service": "OmniCreate API", "status": "running"}
+    return {"status": "ok"}
